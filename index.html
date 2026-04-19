@@ -1081,8 +1081,8 @@ function gerarLink(m, grave) {
   const base = window.location.origin;
 
   return grave
-    ? `${base}/api/play?q=${ytId}&bass=true`
-    : `${base}/api/play?q=${ytId}`;
+    ? `setradio ${base}/api/play?q=${ytId}&bass=true`
+    : `setradio ${base}/api/play?q=${ytId}`;
 }
 
     function gerarYoutubeUrl(m) {
