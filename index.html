@@ -55,7 +55,7 @@
       inset: auto;
       pointer-events: none;
       z-index: 0;
-      filter: blur(10px);
+      filter: blur(4px);
     }
 
     body::before {
@@ -148,7 +148,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(4px);
       background: rgba(255,255,255,0.72);
       border-bottom: 1px solid rgba(219,232,255,.8);
       box-shadow: 0 6px 24px rgba(31, 127, 255, 0.04);
@@ -211,7 +211,7 @@
       border-radius: 999px;
       background: rgba(255,255,255,.72);
       color: var(--blue-dark);
-      box-shadow: var(--shadow-soft);
+      box-shadow: 0 10px 22px rgba(18, 64, 130, 0.06);
       font-weight: 600;
     }
 
@@ -258,8 +258,8 @@
       padding-right: 78px;
       border-radius: 999px;
       border: 1px solid #dce9ff;
-      background: rgba(255,255,255,.92);
-      box-shadow: 0 18px 34px rgba(19, 65, 132, .10);
+      background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,250,255,.94) 100%);
+      box-shadow: 0 16px 30px rgba(19, 65, 132, .08);
     }
 
     .search-icon {
@@ -398,10 +398,10 @@
       border-radius: var(--radius-lg);
       min-height: 184px;
       padding: 30px 22px 22px;
-      box-shadow: var(--shadow-soft);
+      box-shadow: 0 10px 22px rgba(18, 64, 130, 0.06);
       text-align: center;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(4px);
     }
 
     .step-card:hover {
@@ -474,8 +474,8 @@
       border-radius: 20px;
       background: rgba(255,255,255,.88);
       border: 1px solid #dbe7fb;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 22px rgba(18, 64, 130, 0.06);
+      backdrop-filter: blur(4px);
       transition: .18s ease;
     }
 
@@ -577,10 +577,14 @@
       box-shadow: 0 18px 38px rgba(31,127,255,.08);
       padding: 28px 20px;
       text-align: center;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(4px);
     }
 
     .results-feedback.show { display: flex; animation: cardIn .35s ease both; }
+
+    .results-feedback {
+      box-shadow: 0 16px 30px rgba(31,127,255,.07);
+    }
 
     .feedback-inner {
       display: grid;
@@ -633,7 +637,7 @@
       padding: 14px 16px;
       box-shadow: 0 14px 28px rgba(20, 56, 110, .12);
       color: #344052;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(8px);
     }
 
 
@@ -879,8 +883,7 @@
 
         <div class="steps-grid">
           <article class="step-card reveal">
-            <div class="step-number">1</div>
-            <div class="step-icon">
+                        <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <circle cx="11" cy="11" r="7"></circle>
                 <path d="m20 20-3.5-3.5"></path>
@@ -891,8 +894,7 @@
           </article>
 
           <article class="step-card reveal">
-            <div class="step-number">2</div>
-            <div class="step-icon">
+                        <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <path d="m8 5 11 7-11 7z"></path>
               </svg>
@@ -902,8 +904,7 @@
           </article>
 
           <article class="step-card reveal">
-            <div class="step-number">3</div>
-            <div class="step-icon">
+                        <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <rect x="9" y="9" width="11" height="11" rx="2"></rect>
                 <path d="M5 15V6a2 2 0 0 1 2-2h9"></path>
@@ -1002,7 +1003,7 @@ const featuredSongs = [
 
     function emBreve(e) {
       if (e) e.preventDefault();
-      showToast("Em breve.");
+      showToast("Em breve.", "info");
     }
 
     function showToast(message) {
@@ -1081,8 +1082,8 @@ function gerarLink(m, grave) {
   const base = window.location.origin;
 
   return grave
-    ? `setradio ${base}/api/play?q=${ytId}&bass=true`
-    : `setradio ${base}/api/play?q=${ytId}`;
+    ? `${base}/api/play?q=${ytId}&bass=true`
+    : `${base}/api/play?q=${ytId}`;
 }
 
     function gerarYoutubeUrl(m) {
@@ -1232,7 +1233,7 @@ function atualizarVisibilidadeMaisOuvidas() {
     console.error(e);
     resultados = [];
     render();
-    showToast("Erro ao buscar músicas.");
+    showToast("Erro ao buscar músicas.", "error");
   }
 }
 
@@ -1253,18 +1254,18 @@ function atualizarVisibilidadeMaisOuvidas() {
     async function copiar(i, grave = false) {
       const m = resultados[i];
       if (!m) {
-        showToast(carregandoMaisTocadas ? "Aguarde o carregamento." : "Música não encontrada.");
+        showToast(carregandoMaisTocadas ? "Aguarde o carregamento." : "Música não encontrada.", "warning");
         return;
       }
 
       const link = gerarLink(m, grave);
       if (!link) {
-        showToast("Essa música não carregou com ID válido.");
+        showToast("Essa música não carregou com ID válido.", "warning");
         return;
       }
 
       const ok = await copyText(link);
-      showToast(ok ? "Link copiado." : "Falha ao copiar link.");
+      showToast(ok ? "Link copiado." : "Falha ao copiar link.", ok ? "success" : "error");
     }
 
     queryInput.addEventListener("input", () => {
