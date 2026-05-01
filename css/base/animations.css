@@ -1,0 +1,102 @@
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-badge,
+    .hero h1,
+    .hero p,
+    .search-wrap,
+    .hero-stats {
+      animation: heroFadeUp .7s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .hero h1 { animation-delay: .08s; }
+    .hero p { animation-delay: .16s; }
+    .search-wrap { animation-delay: .24s; }
+    .hero-stats { animation-delay: .32s; }
+
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes toastOut {
+      to {
+        opacity: 0;
+        transform: translateY(10px) scale(.985);
+      }
+    }
+
+    @keyframes toastProgress {
+      from { transform: scaleX(1); }
+      to { transform: scaleX(0); }
+    }
+
+    @keyframes bgPulseGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,106,0,0); }
+      50% { box-shadow: 0 0 0 10px rgba(255,106,0,.08); }
+    }
+
+    .hidden { display: none !important; }
+
+
+    @keyframes floatBlobOne {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(-30px, 24px, 0) scale(1.05); }
+    }
+
+    @keyframes floatBlobTwo {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(26px, -22px, 0) scale(1.08); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -18px, 0); }
+    }
+
+    @keyframes searchButtonPulse {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.035); }
+    }

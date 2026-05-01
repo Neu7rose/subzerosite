@@ -1,0 +1,33 @@
+    @media (max-width: 980px) {
+      .header-inner { min-height: 76px; }
+      .nav { gap: 8px; justify-content: flex-end; }
+      .nav a { padding: 10px 13px; }
+      .steps-grid { grid-template-columns: 1fr; max-width: 560px; }
+      .music-card { grid-template-columns: 58px 1fr auto; }
+      .music-actions { grid-column: 1 / -1; justify-content: flex-end; padding-left: 0; }
+      .hero-stats { max-width: 100%; }
+    }
+
+    @media (max-width: 680px) {
+      .header-inner {
+        flex-direction: column;
+        justify-content: center;
+        padding: 14px 0;
+      }
+      .hero { padding-top: 54px; }
+      .search-box { padding-right: 70px; }
+      .search-input { height: 64px; }
+      .search-submit { width: 50px; height: 50px; }
+      .hero-stats { grid-template-columns: 1fr; gap: 8px; }
+      .hero-stat:not(:last-child)::after { display: none; }
+      .music-card {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+      .music-rank { display: none; }
+      .music-cover { width: 56px; height: 56px; }
+      .music-actions { justify-content: flex-start; padding-left: 0; }
+      .music-meta { gap: 8px; }
+      .music-title { font-size: .98rem; }
+      .music-artist { white-space: normal; }
+    }

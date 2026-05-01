@@ -1,0 +1,84 @@
+.section-head {
+  text-align: center;
+  margin-bottom: 34px;
+}
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.3vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  color: var(--text);
+}
+.section-head p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: .94rem;
+}
+.how-it-works { padding: 30px 0 62px; }
+.steps-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+.step-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(22,22,22,.92) 0%, rgba(12,12,12,.92) 100%);
+  border: 1px solid rgba(255, 155, 74, .15);
+  border-radius: var(--radius-lg);
+  min-height: 190px;
+  padding: 28px 22px 24px;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+.step-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255, 155, 74, .12), transparent 48%);
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
+}
+.step-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 155, 74, .36);
+  box-shadow: 0 24px 48px rgba(0,0,0,.34), 0 0 34px rgba(255,122,26,.08);
+}
+.step-card:hover::before { opacity: 1; }
+.step-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 19px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(255,155,74,.18) 0%, rgba(255,122,26,.10) 100%);
+  color: var(--orange);
+  border: 1px solid rgba(255, 155, 74, .22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 14px 26px rgba(0,0,0,.2);
+  position: relative;
+  z-index: 1;
+}
+.step-icon svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.step-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.28rem;
+  letter-spacing: -0.035em;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.step-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: .98rem;
+  position: relative;
+  z-index: 1;
+}
