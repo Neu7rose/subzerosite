@@ -8,7 +8,7 @@
 
   const PIX_CONFIG = {
     enabled: true,
-    key: '00020101021126580014br.gov.bcb.pix013650222abb-27fe-4af0-b72c-ccde5b4550a35204000053039865802BR5913KAUAN R NUNES6008BRASILIA62070503***6304F63A',
+    key: 'semchavepixcadastrada@gmail.com',
     owner: 'Subzero Music',
     description: 'Apoie a plataforma e ajude o projeto a continuar online.'
   };
