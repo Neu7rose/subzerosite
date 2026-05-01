@@ -4,976 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Subzero Music</title>
+
   <link rel="icon" href="https://imgur.com/oHpysQm.png" type="image/png">
-  <style>
-    :root {
-      --bg: #f6f9ff;
-      --bg-2: #edf4ff;
-      --card: rgba(255,255,255,0.86);
-      --line: #dbe8ff;
-      --text: #182033;
-      --muted: #6f7b91;
-      --blue: #4a9bff;
-      --blue-strong: #1f7fff;
-      --blue-dark: #145dc0;
-      --blue-soft: #e9f3ff;
-      --shadow: 0 18px 40px rgba(31, 127, 255, 0.10);
-      --shadow-soft: 0 10px 24px rgba(18, 64, 130, 0.08);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --container: 1120px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 8% 88%, rgba(74,155,255,.10) 0, rgba(74,155,255,.10) 140px, transparent 141px),
-        radial-gradient(circle at 88% 16%, rgba(74,155,255,.09) 0, rgba(74,155,255,.09) 210px, transparent 211px),
-        radial-gradient(circle at 68% 72%, rgba(74,155,255,.08) 0, rgba(74,155,255,.08) 110px, transparent 111px),
-        linear-gradient(180deg, #f9fbff 0%, #f4f8ff 100%);
-      min-height: 100vh;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    button, input, select, textarea { font: inherit; }
-
-    .container {
-      width: min(var(--container), calc(100% - 32px));
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(4px);
-    }
-
-    body::before {
-      width: 480px;
-      height: 480px;
-      top: -120px;
-      right: -120px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(102, 168, 255, 0.22) 0%, rgba(102, 168, 255, 0.10) 38%, rgba(102, 168, 255, 0.02) 65%, transparent 72%);
-      animation: floatBlobOne 18s ease-in-out infinite;
-    }
-
-    body::after {
-      width: 360px;
-      height: 360px;
-      left: -90px;
-      top: 58%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(45, 140, 255, 0.16) 0%, rgba(45, 140, 255, 0.05) 44%, transparent 72%);
-      animation: floatBlobTwo 22s ease-in-out infinite;
-    }
-
-    .site-bg {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .site-bg::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: 0.45;
-      background-image:
-        linear-gradient(rgba(102, 168, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(102, 168, 255, 0.045) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.55), transparent 92%);
-    }
-
-    .site-bg::after {
-      content: "";
-      position: absolute;
-      width: 540px;
-      height: 540px;
-      right: 8%;
-      top: 20%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(232, 242, 255, 0.45) 32%, rgba(232, 242, 255, 0.08) 58%, transparent 72%);
-      animation: bgPulseGlow 10s ease-in-out infinite;
-    }
-
-    .bg-orb {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(102, 168, 255, 0.16) 0%, rgba(102, 168, 255, 0.05) 45%, transparent 72%);
-      filter: blur(4px);
-      animation: drift 18s ease-in-out infinite;
-    }
-
-    .bg-orb.orb-1 {
-      width: 220px;
-      height: 220px;
-      top: 14%;
-      left: 4%;
-      animation-delay: -2s;
-    }
-
-    .bg-orb.orb-2 {
-      width: 180px;
-      height: 180px;
-      top: 62%;
-      right: 10%;
-      animation-delay: -8s;
-      animation-duration: 22s;
-    }
-
-    .bg-orb.orb-3 {
-      width: 120px;
-      height: 120px;
-      top: 78%;
-      left: 16%;
-      animation-delay: -4s;
-      animation-duration: 16s;
-    }
-
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(4px);
-      background: rgba(255,255,255,0.72);
-      border-bottom: 1px solid rgba(219,232,255,.8);
-      box-shadow: 0 6px 24px rgba(31, 127, 255, 0.04);
-    }
-
-    .header-inner {
-      min-height: 74px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      color: var(--blue-strong);
-      font-weight: 800;
-      font-size: 1.15rem;
-      letter-spacing: -0.03em;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      color: #4a5568;
-      font-size: .94rem;
-      font-weight: 600;
-      padding: 10px 14px;
-      border-radius: 12px;
-      transition: .18s ease;
-    }
-
-    .nav a:hover,
-    .nav a.active {
-      color: var(--blue-strong);
-      background: rgba(74,155,255,.09);
-    }
-
-    .hero {
-      padding: 64px 0 34px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 10px 18px;
-      border: 1px solid #cfe1ff;
-      border-radius: 999px;
-      background: rgba(255,255,255,.72);
-      color: var(--blue-dark);
-      box-shadow: 0 10px 22px rgba(18, 64, 130, 0.06);
-      font-weight: 600;
-    }
-
-    .hero-badge svg {
-      width: 19px;
-      height: 19px;
-      color: var(--blue-strong);
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(2.2rem, 5vw, 4.1rem);
-      line-height: 1.02;
-      letter-spacing: -0.055em;
-      font-weight: 900;
-      color: #151f36;
-    }
-
-    .hero h1 span {
-      display: block;
-      margin-top: 10px;
-      background: linear-gradient(180deg, #63b1ff 0%, #237fff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      max-width: 760px;
-      margin: 26px auto 0;
-      color: var(--muted);
-      font-size: clamp(.98rem, 1.4vw, 1.08rem);
-      line-height: 1.7;
-    }
-
-    .search-wrap {
-      max-width: 580px;
-      margin: 38px auto 0;
-      position: relative;
-    }
-
-    .search-box {
-      position: relative;
-      padding-right: 78px;
-      border-radius: 999px;
-      border: 1px solid #dce9ff;
-      background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,250,255,.94) 100%);
-      box-shadow: 0 16px 30px rgba(19, 65, 132, .08);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 22px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      color: #8a96ad;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .search-input {
-      width: 100%;
-      height: 64px;
-      border: 0;
-      background: transparent;
-      padding: 0 22px 0 58px;
-      color: #24314d;
-      outline: none;
-      font-size: 1rem;
-    }
-
-    .search-input::placeholder { color: #a0abc0; }
-
-    .search-submit {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
-      border: 0;
-      border-radius: 50%;
-      background: linear-gradient(180deg, #59a8ff 0%, #1f7fff 100%);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      line-height: 0;
-      box-shadow: 0 12px 24px rgba(31,127,255,.28);
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-      animation: searchButtonPulse 3.2s ease-in-out infinite;
-    }
-
-    .search-submit svg {
-      width: 20px;
-      height: 20px;
-      display: block;
-      flex: 0 0 auto;
-    }
-
-    .search-submit:hover {
-      transform: translateY(calc(-50% - 1px)) scale(1.02);
-      box-shadow: 0 16px 28px rgba(31,127,255,.34);
-      filter: brightness(1.03);
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      max-width: 480px;
-      margin: 34px auto 0;
-    }
-
-    .hero-stat {
-      padding: 8px 18px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-stat:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 38px;
-      background: #dbe6f9;
-    }
-
-    .hero-stat strong {
-      display: block;
-      font-size: clamp(1.45rem, 2.7vw, 1.85rem);
-      letter-spacing: -0.04em;
-      color: #16203a;
-    }
-
-    .hero-stat span {
-      color: var(--muted);
-      font-size: .88rem;
-    }
-
-    .section-head {
-      text-align: center;
-      margin-bottom: 34px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(1.7rem, 3.3vw, 2.5rem);
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      color: #18223c;
-    }
-
-    .section-head p {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    .how-it-works {
-      padding: 28px 0 58px;
-    }
-
-    .steps-grid {
-      max-width: 860px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 26px;
-      align-items: stretch;
-    }
-
-    .step-card {
-      position: relative;
-      background: var(--card);
-      border: 1px solid #d6e4ff;
-      border-radius: var(--radius-lg);
-      min-height: 184px;
-      padding: 30px 22px 22px;
-      box-shadow: 0 10px 22px rgba(18, 64, 130, 0.06);
-      text-align: center;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      backdrop-filter: blur(4px);
-    }
-
-    .step-card:hover {
-      transform: translateY(-3px);
-      border-color: #b8d4ff;
-      box-shadow: 0 20px 38px rgba(31,127,255,.13);
-    }
-
-    .step-number {
-      position: absolute;
-      top: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      background: linear-gradient(180deg, #5ba9ff 0%, #1f7fff 100%);
-      box-shadow: 0 10px 20px rgba(31,127,255,.26);
-    }
-
-    .step-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      margin: 0 auto 22px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(180deg, #edf5ff 0%, #dfeeff 100%);
-      color: var(--blue-strong);
-    }
-
-    .step-icon svg { width: 30px; height: 30px; stroke: currentColor; }
-
-    .step-card h3 {
-      margin: 0 0 12px;
-      font-size: 1.35rem;
-      letter-spacing: -0.03em;
-      color: #151f36;
-    }
-
-    .step-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 1rem;
-    }
-
-    .music-section {
-      padding: 8px 0 72px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .music-section::before {
-      content: "";
-      position: absolute;
-      top: 54px;
-      right: max(2%, calc(50% - 610px));
-      width: 560px;
-      height: 560px;
-      border-radius: 50%;
-      border: 2px solid rgba(210, 224, 248, .55);
-      pointer-events: none;
-    }
-
-    .music-section::after {
-      content: "";
-      position: absolute;
-      top: 178px;
-      right: max(12%, calc(50% - 490px));
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      border: 1px solid rgba(220, 231, 248, .7);
-      pointer-events: none;
-    }
-
-    .music-list {
-      max-width: 920px;
-      margin: 0 auto;
-      display: grid;
-      gap: 14px;
-    }
-
-    
-.music-card {
-      display: grid;
-      grid-template-columns: 60px 1fr auto;
-      gap: 18px;
-      align-items: center;
-      min-height: 92px;
-      padding: 14px 18px;
-      border-radius: 24px;
-      background: rgba(255,255,255,.78);
-      border: 1px solid #d7e3f8;
-      box-shadow: 0 12px 26px rgba(18, 64, 130, 0.06);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .music-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 38%);
-      pointer-events: none;
-    }
-
-    .music-card:hover {
-      transform: translateY(-2px);
-      border-color: #bfd6fb;
-      box-shadow: 0 18px 34px rgba(31,127,255,.12);
-      background: rgba(255,255,255,.92);
-    }
-
-    .music-rank {
-      display: none;
-    }
-
-    .music-cover {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
-      object-fit: cover;
-      background: #d9e7ff;
-      box-shadow: 0 8px 18px rgba(31,127,255,.14);
-      position: relative;
-      z-index: 1;
-    }
-
-    .music-content {
-      min-width: 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .music-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      margin-bottom: 6px;
-      flex-wrap: wrap;
-    }
-
-    .music-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 28px;
-      padding: 0 12px;
-      border-radius: 999px;
-      font-size: .82rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      color: #0d61cb;
-      background: linear-gradient(180deg, #e7f1ff 0%, #d7e8ff 100%);
-      border: 1px solid #c5dcff;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
-      flex: 0 0 auto;
-    }
-
-    .music-title {
-      margin: 0;
-      font-size: 1.02rem;
-      line-height: 1.3;
-      font-weight: 900;
-      color: #18223c;
-      letter-spacing: -0.02em;
-      min-width: 0;
-    }
-
-    .music-artist {
-      color: #67748d;
-      font-size: 1rem;
-      line-height: 1.45;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-
-    .music-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding-left: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 15px;
-      border: 1px solid #d6e3f8;
-      background: rgba(255,255,255,.56);
-      display: grid;
-      place-items: center;
-      color: #72809a;
-      cursor: pointer;
-      padding: 0;
-      transition: .18s ease;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
-    }
-
-    .icon-btn:hover {
-      background: rgba(240,247,255,.95);
-      color: var(--blue-strong);
-      border-color: #bfd6fb;
-      box-shadow: 0 10px 20px rgba(31,127,255,.10);
-      transform: translateY(-1px);
-    }
-
-    .icon-btn svg {
-      width: 20px;
-      height: 20px;
-      stroke: currentColor;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-    }
-
-    .empty {
-
-      max-width: 920px;
-      margin: 0 auto;
-      text-align: center;
-      color: var(--muted);
-      padding-top: 12px;
-      font-size: 1rem;
-    }
-
-    .results-feedback {
-      max-width: 920px;
-      margin: 0 auto 16px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      min-height: 152px;
-      border-radius: 24px;
-      border: 1px solid #d9e8ff;
-      background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(239,246,255,.98) 100%);
-      box-shadow: 0 18px 38px rgba(31,127,255,.08);
-      padding: 28px 20px;
-      text-align: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .results-feedback.show { display: flex; animation: cardIn .35s ease both; }
-
-    .results-feedback {
-      box-shadow: 0 16px 30px rgba(31,127,255,.07);
-    }
-
-    .feedback-inner {
-      display: grid;
-      justify-items: center;
-      gap: 14px;
-    }
-
-    .feedback-title {
-      margin: 0;
-      font-size: clamp(1.8rem, 3.4vw, 2.8rem);
-      line-height: 1.05;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: #192441;
-    }
-
-    .feedback-title span { color: var(--blue-strong); }
-
-    .feedback-spinner {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 3px solid #d8e9ff;
-      border-top-color: var(--blue-strong);
-      animation: spin .85s linear infinite;
-    }
-
-    .feedback-text {
-      color: #627089;
-      font-size: 1rem;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .toast-wrap {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 100;
-      display: grid;
-      gap: 10px;
-      width: min(340px, calc(100% - 32px));
-    }
-
-    .toast {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-height: 60px;
-      padding: 14px 16px;
-      background: rgba(255,255,255,.97);
-      border: 1px solid #e6edf9;
-      border-radius: 16px;
-      box-shadow: 0 14px 28px rgba(20, 56, 110, .12);
-      color: #344052;
-      backdrop-filter: blur(8px);
-      overflow: hidden;
-      animation: toastIn .28s ease both, toastOut .32s ease 2.9s forwards;
-    }
-
-    .toast::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 3px;
-      width: 100%;
-      background: linear-gradient(90deg, #8cc4ff 0%, #4a9bff 100%);
-      transform-origin: left center;
-      animation: toastProgress 3s linear forwards;
-    }
-
-    .toast-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      border: 2px solid #dbe8ff;
-      background: #fff;
-    }
-
-    .toast-icon svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2.4;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .toast-content {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
-
-    .toast-message {
-      font-size: 0.96rem;
-      font-weight: 700;
-      color: #273246;
-      line-height: 1.2;
-    }
-
-    .toast-subtext {
-      font-size: 0.82rem;
-      color: #7b879b;
-      line-height: 1.2;
-    }
-
-    .toast.success .toast-icon {
-      border-color: rgba(34, 197, 94, 0.28);
-      color: #16a34a;
-    }
-
-    .toast.error .toast-icon {
-      border-color: rgba(239, 68, 68, 0.24);
-      color: #ef4444;
-    }
-
-    .toast.warning .toast-icon {
-      border-color: rgba(245, 158, 11, 0.28);
-      color: #d97706;
-    }
-
-    .toast.info .toast-icon {
-      border-color: rgba(74,155,255,.28);
-      color: #4a9bff;
-    }
-
-
-    .site-footer {
-      border-top: 1px solid rgba(190, 214, 255, .85);
-      background: rgba(188, 215, 255, .22);
-      padding: 24px 16px 26px;
-      text-align: center;
-      color: #5c6880;
-      font-size: .94rem;
-    }
-
-    .site-footer p {
-      margin: 0;
-    }
-
-
-
-    ::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: linear-gradient(180deg, rgba(227,239,255,.9) 0%, rgba(243,248,255,.95) 100%);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #76b5ff 0%, #1f7fff 100%);
-      border-radius: 999px;
-      border: 3px solid rgba(243,248,255,.95);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(180deg, #5ca6ff 0%, #156fe6 100%);
-    }
-
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: #4a9bff rgba(243,248,255,.95);
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(26px);
-      transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1);
-      will-change: opacity, transform;
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .hero-badge,
-    .hero h1,
-    .hero p,
-    .search-wrap,
-    .hero-stats {
-      animation: heroFadeUp .7s cubic-bezier(.2,.8,.2,1) both;
-    }
-
-    .hero h1 { animation-delay: .08s; }
-    .hero p { animation-delay: .16s; }
-    .search-wrap { animation-delay: .24s; }
-    .hero-stats { animation-delay: .32s; }
-
-    @keyframes heroFadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(22px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes cardIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px) scale(.985);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateY(14px) scale(.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes toastOut {
-      to {
-        opacity: 0;
-        transform: translateY(10px) scale(.985);
-      }
-    }
-
-    @keyframes toastProgress {
-      from { transform: scaleX(1); }
-      to { transform: scaleX(0); }
-    }
-
-    @keyframes bgPulseGlow {
-      0%, 100% { box-shadow: 0 0 0 rgba(31,127,255,0); }
-      50% { box-shadow: 0 0 0 10px rgba(31,127,255,.08); }
-    }
-
-    .hidden { display: none !important; }
-
-
-    @keyframes floatBlobOne {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(-30px, 24px, 0) scale(1.05); }
-    }
-
-    @keyframes floatBlobTwo {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(26px, -22px, 0) scale(1.08); }
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.06); opacity: 1; }
-    }
-
-    @keyframes drift {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(0, -18px, 0); }
-    }
-
-    @keyframes searchButtonPulse {
-      0%, 100% { transform: translateY(-50%) scale(1); }
-      50% { transform: translateY(-50%) scale(1.035); }
-    }
-
-    @media (max-width: 980px) {
-      .header-inner { min-height: 76px; }
-      .nav { gap: 8px; justify-content: flex-end; }
-      .nav a { padding: 10px 13px; }
-      .steps-grid { grid-template-columns: 1fr; max-width: 560px; }
-      .music-card { grid-template-columns: 58px 1fr auto; }
-      .music-actions { grid-column: 1 / -1; justify-content: flex-end; padding-left: 0; }
-      .hero-stats { max-width: 100%; }
-    }
-
-    @media (max-width: 680px) {
-      .header-inner {
-        flex-direction: column;
-        justify-content: center;
-        padding: 14px 0;
-      }
-      .hero { padding-top: 54px; }
-      .search-box { padding-right: 70px; }
-      .search-input { height: 64px; }
-      .search-submit { width: 50px; height: 50px; }
-      .hero-stats { grid-template-columns: 1fr; gap: 8px; }
-      .hero-stat:not(:last-child)::after { display: none; }
-      .music-card {
-        grid-template-columns: 1fr;
-        text-align: left;
-      }
-      .music-rank { display: none; }
-      .music-cover { width: 56px; height: 56px; }
-      .music-actions { justify-content: flex-start; padding-left: 0; }
-      .music-meta { gap: 8px; }
-      .music-title { font-size: .98rem; }
-      .music-artist { white-space: normal; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/app.js" defer></script>
 </head>
 <body>
   <div class="site-bg" aria-hidden="true">
@@ -981,22 +15,29 @@
     <span class="bg-orb orb-2"></span>
     <span class="bg-orb orb-3"></span>
   </div>
+
   <header class="header">
     <div class="container header-inner">
       <a class="brand" href="#inicio" aria-label="Subzero Music">
         <span>Subzero Music</span>
       </a>
 
-      <nav class="nav">
-        <a class="active" href="#inicio">Início</a>
-        <a href="#" onclick="emBreve(event)">Em Breve</a>
-        <a href="#" onclick="emBreve(event)">Em Breve</a>
-        <a href="#" onclick="emBreve(event)">Em Breve</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="nav" aria-label="Navegação principal">
+          <a class="nav-link active" href="#inicio" data-page="home">Início</a>
+          <a class="nav-link" href="#contatos" data-page="contacts">Contatos</a>
+        </nav>
+      </div>
     </div>
   </header>
 
+  <!-- Botão de tema fora do header: flutuante no canto inferior esquerdo -->
+  <button id="themeToggle" class="theme-toggle" type="button" data-action="toggle-theme" aria-label="Alternar tema claro ou escuro" title="Tema claro/escuro">
+    <span id="themeToggleIcon">☾</span>
+  </button>
+
   <main>
+    <div id="homePage" class="page-view page-active">
     <section class="hero" id="inicio">
       <div class="container">
         <div class="hero-badge reveal is-visible">
@@ -1021,7 +62,7 @@
               <path d="m20 20-3.5-3.5"></path>
             </svg>
             <input id="query" class="search-input" placeholder="Busque pelo nome da música ou cole um link aqui..." />
-            <button class="search-submit" onclick="buscar()" aria-label="Pesquisar">
+            <button class="search-submit" data-action="search" aria-label="Pesquisar">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
                 <circle cx="11" cy="11" r="7"></circle>
                 <path d="m20 20-3.5-3.5"></path>
@@ -1045,7 +86,8 @@
           </div>
         </div>
       </div>
-    </section>
+    
+</section>
 
     <section class="how-it-works" id="como-funciona">
       <div class="container">
@@ -1056,7 +98,7 @@
 
         <div class="steps-grid">
           <article class="step-card reveal">
-                        <div class="step-icon">
+            <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <circle cx="11" cy="11" r="7"></circle>
                 <path d="m20 20-3.5-3.5"></path>
@@ -1067,7 +109,7 @@
           </article>
 
           <article class="step-card reveal">
-                        <div class="step-icon">
+            <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <path d="m8 5 11 7-11 7z"></path>
               </svg>
@@ -1077,7 +119,7 @@
           </article>
 
           <article class="step-card reveal">
-                        <div class="step-icon">
+            <div class="step-icon">
               <svg viewBox="0 0 24 24" stroke-width="2">
                 <rect x="9" y="9" width="11" height="11" rx="2"></rect>
                 <path d="M5 15V6a2 2 0 0 1 2-2h9"></path>
@@ -1109,415 +151,130 @@
         <div id="emptyState" class="empty hidden">Nenhuma música encontrada.</div>
       </div>
     </section>
+
+    </div>
+
+    <section id="contactPage" class="contacts-page page-view" aria-labelledby="contactsTitle">
+      <div class="container">
+        <div class="contacts-hero reveal is-visible">
+          <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>
+            <span>Central de Contatos</span>
+          </div>
+          <h1 id="contactsTitle">Fale com a gente</h1>
+          <p>Pix e canais oficiais em uma área separada das músicas, limpa e organizada.</p>
+        </div>
+
+
+        <div class="contacts-pix-block">
+          <div class="section-mini-head">
+            <span>Pix</span>
+            <h2>Apoie o projeto</h2>
+            <p>Apoie a Subzero Music e ajude o projeto a continuar evoluindo.</p>
+          </div>
+        <div class="pix-panel">
+          <div class="pix-info">
+            <span class="pix-label">Chave Pix</span>
+            <strong id="pixKeyText">carregando...</strong>
+            <small id="pixOwnerText">Subzero Music</small>
+          </div>
+          <button class="pix-copy" data-action="copy-pix">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copiar chave
+          </button>
+        </div>
+
+        <div class="support-info">
+          <div class="info-box">
+            <h3>Apoie o Projeto</h3>
+            <p>
+              Para ajudar no crescimento do projeto e manter atualizações constantes,
+              pedimos uma ajuda financeira. Toda contribuição será utilizada para melhorias,
+              novos sistemas e uma experiência cada vez melhor para todos.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>Contribuição</h3>
+            <p>
+              Seu apoio faz toda a diferença! Com a sua ajuda conseguimos manter o projeto ativo,
+              trazer novidades e evoluir cada vez mais a plataforma.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>Suporte</h3>
+            <p>
+              Para qualquer dúvida ou suporte, entre em contato através de qualquer um dos links abaixo.
+            </p>
+          </div>
+        </div>
+
+        <div class="contacts-grid">
+          <a class="contact-card" href="https://discord.gg/" target="_blank" rel="noopener">
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M16 12h.01"></path><path d="M7.5 17.5c3 1 6 1 9 0"></path><path d="M6.5 6.5C8.8 5.6 10.8 5.2 12 5.2s3.2.4 5.5 1.3c1.2 2.2 1.8 5.4 1.6 9.5-1.6 1.2-3.2 2-4.8 2.4l-.8-1.6"></path><path d="M10.5 16.8l-.8 1.6c-1.6-.4-3.2-1.2-4.8-2.4-.2-4.1.4-7.3 1.6-9.5"></path></svg></div>
+            <div class="contact-content"><h3>Discord</h3><p>Entre no servidor oficial, abra ticket e fale com a comunidade.</p><span>Entrar <strong>→</strong></span></div>
+          </a>
+          <a class="contact-card" href="https://www.instagram.com/" target="_blank" rel="noopener">
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".8"></circle></svg></div>
+            <div class="contact-content"><h3>Instagram</h3><p>Veja posts, novidades, eventos e avisos importantes.</p><span>Seguir <strong>→</strong></span></div>
+          </a>
+          <a class="contact-card" href="https://www.tiktok.com/" target="_blank" rel="noopener">
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.25a6.2 6.2 0 0 0 3.65 1.17v3.55a9.76 9.76 0 0 1-3.64-.7v5.35a6.03 6.03 0 1 1-6.03-6.03c.43 0 .85.05 1.25.13v3.7a2.47 2.47 0 1 0 1.18 2.1V2.75h3.6c.08.76.33 2.2 1.99 3.5Z"></path></svg></div>
+            <div class="contact-content"><h3>TikTok</h3><p>Acompanhe vídeos, trends e os melhores momentos da comunidade.</p><span>Seguir <strong>→</strong></span></div>
+          </a>
+          <a class="contact-card" href="https://www.youtube.com/" target="_blank" rel="noopener">
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12s0-4-1-5c-.6-.7-1.3-.8-2-.9C16.2 5.8 12 5.8 12 5.8s-4.2 0-7 .3c-.7.1-1.4.2-2 .9-1 1-1 5-1 5s0 4 1 5c.6.7 1.3.8 2 .9 2.8.3 7 .3 7 .3s4.2 0 7-.3c.7-.1 1.4-.2 2-.9 1-1 1-5 1-5z"></path><path d="m10 9 5 3-5 3z"></path></svg></div>
+            <div class="contact-content"><h3>YouTube</h3><p>Tutoriais, demonstrações e conteúdos da Subzero Music.</p><span>Inscrever-se <strong>→</strong></span></div>
+          </a>
+        </div>
+
+        <div class="contacts-note"><strong>Suporte:</strong> qualquer dúvida, chame em qualquer um dos links acima.</div>
+      </div>
+    </section>
+
+
   </main>
 
   <footer class="site-footer">
     <p>© 2025 - 2026 Subzero Músicas. Todos os direitos reservados.</p>
   </footer>
 
-  <div id="toastWrap" class="toast-wrap"></div>
 
-  <script>
-    const queryInput = document.getElementById("query");
-    const musicList = document.getElementById("lista");
-    const emptyState = document.getElementById("emptyState");
-    const toastWrap = document.getElementById("toastWrap");
-    const resultsFeedback = document.getElementById("resultsFeedback");
-    const feedbackTitle = document.getElementById("feedbackTitle");
-    const feedbackText = document.getElementById("feedbackText");
-    const maisOuvidasHead = document.getElementById("maisOuvidasHead");
-    const sectionTitle = document.getElementById("sectionTitle");
-    const sectionSubtitle = document.getElementById("sectionSubtitle");
 
-    let resultados = [];
-let carregandoMaisTocadas = false;
-let modoBusca = false;
+  <div id="musicPlayer" class="music-player" aria-live="polite">
+    <div class="player-shell">
+      <button class="player-cover-btn" data-action="toggle-player" aria-label="Tocar ou pausar música">
+        <img id="playerCover" src="https://via.placeholder.com/72x72/14100d/ff8a1f?text=%E2%99%AA" alt="Capa da música atual">
+        <span id="playerPlayIcon" class="player-play-icon">▶</span>
+      </button>
 
-const featuredSongs = [
-  {
-    title: "SEQUÊNCIA FEITICEIRA",
-    artist: "Pedro Sampaio, MC GW, MC Rodrigo do CN, MC Jhey, MC Nito",
-    id: "_zKnEm9xPWw"
-  },
-  {
-    title: "JETSKI",
-    artist: "Pedro Sampaio, MC Meno K, Melody",
-    id: "7CF5qbw8zec"
-  },
-  {
-    title: "RELÍQUIA DO 2T",
-    artist: "MC Tuto, MC Joãozinho VT, MC FR da Norte, MC Vine7, MC Dkziin, DJ Gu",
-    id: "J0HkF9E0KPA"
-  },
-  {
-    title: "P do Pecado",
-    artist: "Grupo Menos É Mais, Simone Mendes",
-    id: "Q2cD49TtjcA"
-  },
-  {
-    title: "Loira Gelada",
-    artist: "Luísa Sonza",
-    id: "gQihxm0-U64"
-  },
-  {
-    title: "Apaguei Pra Todos",
-    artist: "Ferrugem, Sorriso Maroto",
-    id: "o3dknP3jclw"
-  },
-  {
-    title: "Ama um Maloqueiro",
-    artist: "Rafa e Junior, Hugo e Guilherme, DJ Ari SL",
-    id: "nclqEBJIxWk"
-  },
-  {
-    title: "Lapada Dela",
-    artist: "Grupo Menos É Mais, Matheus Fernandes",
-    id: "fd3PJfv7SaY"
-  }
-];
-
-    function emBreve(e) {
-      if (e) e.preventDefault();
-      showToast("Em breve.", "info");
-    }
-
-    function showToast(message, type = "info") {
-      const toast = document.createElement("div");
-      toast.className = `toast ${type}`;
-
-      const icons = {
-        success: `
-          <svg viewBox="0 0 24 24" stroke="currentColor">
-            <path d="M5 12.5l4.2 4.2L19 7.5"></path>
-          </svg>
-        `,
-        error: `
-          <svg viewBox="0 0 24 24" stroke="currentColor">
-            <path d="M8 8l8 8"></path>
-            <path d="M16 8l-8 8"></path>
-          </svg>
-        `,
-        warning: `
-          <svg viewBox="0 0 24 24" stroke="currentColor">
-            <path d="M12 8v5"></path>
-            <path d="M12 16h.01"></path>
-            <path d="M10.3 3.8 2.9 17a2 2 0 0 0 1.74 3h14.72A2 2 0 0 0 21.1 17L13.7 3.8a2 2 0 0 0-3.4 0Z"></path>
-          </svg>
-        `,
-        info: `
-          <svg viewBox="0 0 24 24" stroke="currentColor">
-            <path d="M12 10v6"></path>
-            <path d="M12 7h.01"></path>
-            <circle cx="12" cy="12" r="9"></circle>
-          </svg>
-        `
-      };
-
-      const subtexts = {
-        success: "Ação concluída com sucesso",
-        error: "Ocorreu um problema",
-        warning: "Verifique essa ação",
-        info: "Informação do sistema"
-      };
-
-      toast.innerHTML = `
-        <div class="toast-icon">${icons[type] || icons.info}</div>
-        <div class="toast-content">
-          <div class="toast-message">${escapeHtml(message)}</div>
-          <div class="toast-subtext">${subtexts[type] || subtexts.info}</div>
+      <div class="player-main">
+        <div class="player-text">
+          <strong id="playerTitle">Nenhuma música tocando</strong>
+          <span id="playerArtist">Clique na capa de uma música para tocar no site</span>
         </div>
-      `;
+        <div class="player-progress-wrap">
+          <span id="playerCurrent">0:00</span>
+          <input id="playerProgress" class="player-progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progresso da música">
+          <span id="playerDuration">0:00</span>
+        </div>
+      </div>
 
-      toastWrap.appendChild(toast);
-      setTimeout(() => toast.remove(), 3200);
-    }
+      <div class="player-actions">
+        <label class="player-volume" title="Volume">
+          <span>Vol</span>
+          <input id="playerVolume" type="range" min="0" max="1" value="0.75" step="0.01" aria-label="Volume da música">
+        </label>
+        <button class="player-btn" data-action="stop-player" title="Parar música" aria-label="Parar música">■</button>
+        <button class="player-btn player-btn-primary" data-action="toggle-player" title="Play/Pause" aria-label="Play/Pause">
+          <span id="playerMainIcon">▶</span>
+        </button>
+      </div>
+    </div>
+    <audio id="siteAudio" preload="none"></audio>
+  </div>
 
-    function escapeHtml(str = "") {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function normalizarLista(data) {
-      if (Array.isArray(data)) return data;
-      if (Array.isArray(data?.results)) return data.results;
-      if (Array.isArray(data?.data)) return data.data;
-      return [];
-    }
-
-    function pegarTitulo(m) {
-      return m.title || m.name || m.music || m.nome || "Sem nome";
-    }
-
-    function pegarArtista(m) {
-      return m.artist || m.author || m.channel || m.artista || "Desconhecido";
-    }
-
-    function extrairYoutubeIdDeUrl(url) {
-      if (!url) return "";
-      try {
-        const u = new URL(url);
-        if (u.hostname.includes("youtube.com")) return u.searchParams.get("v") || "";
-        if (u.hostname.includes("youtu.be")) return u.pathname.replace("/", "").trim();
-        return "";
-      } catch {
-        return "";
-      }
-    }
-
-    function pegarYoutubeId(m) {
-  return (
-    m.id ||
-    m.videoId ||
-    m.video_id ||
-    m.youtubeId ||
-    m.youtube_id ||
-    m.ytid ||
-    m.identifier ||
-    extrairYoutubeIdDeUrl(m.url) ||
-    extrairYoutubeIdDeUrl(m.link) ||
-    ""
-  );
-}
-
-    function pegarCapa(m) {
-      const apiCover = m.thumb || m.thumbnail || m.image || m.cover || m.capa || "";
-      if (apiCover) return apiCover;
-
-      const ytId = pegarYoutubeId(m);
-      if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-
-      return "https://via.placeholder.com/72x72/e8f2ff/1f7fff?text=%E2%99%AA";
-    }
-
-function gerarLink(m, grave) {
-  const ytId = pegarYoutubeId(m);
-  if (!ytId) return "";
-
-  const base = window.location.origin;
-
-  return grave
-    ? `setradio ${base}/api/play?q=${ytId}&bass=true`
-    : `setradio ${base}/api/play?q=${ytId}`;
-}
-
-    function gerarYoutubeUrl(m) {
-      const ytId = pegarYoutubeId(m);
-      if (ytId) return `https://www.youtube.com/watch?v=${encodeURIComponent(ytId)}`;
-      const titulo = pegarTitulo(m);
-      const artista = pegarArtista(m);
-      return `https://www.youtube.com/results?search_query=${encodeURIComponent(titulo + " " + artista)}`;
-    }
-
-    async function copyText(text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-
-
-function atualizarCabecalhoMusicas() {
-  if (!sectionTitle || !sectionSubtitle) return;
-
-  if (modoBusca) {
-    const quantidade = resultados.length;
-    sectionTitle.textContent = "Resultado da Busca";
-    sectionSubtitle.textContent = `${quantidade} ${quantidade === 1 ? "música encontrada" : "músicas encontradas"}`;
-  } else {
-    sectionTitle.textContent = "Mais Ouvidas";
-    sectionSubtitle.textContent = "As músicas mais populares da comunidade";
-  }
-}
-
-function atualizarVisibilidadeMaisOuvidas() {
-  if (maisOuvidasHead) {
-    maisOuvidasHead.classList.toggle("hidden", carregandoMaisTocadas);
-  }
-  atualizarCabecalhoMusicas();
-}
-
-    function mostrarBuscando(texto = "Buscando músicas...") {
-      feedbackTitle.innerHTML = 'Buscando<span>...</span>';
-      feedbackText.textContent = texto;
-      resultsFeedback.classList.add("show");
-      atualizarVisibilidadeMaisOuvidas();
-      musicList.innerHTML = "";
-      emptyState.classList.add("hidden");
-    }
-
-    function esconderBuscando() {
-      resultsFeedback.classList.remove("show");
-      atualizarVisibilidadeMaisOuvidas();
-    }
-
-    function iniciarReveals() {
-      const elementos = document.querySelectorAll('.reveal:not(.is-visible)');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-
-      elementos.forEach((el, index) => {
-        el.style.transitionDelay = `${Math.min(index * 45, 220)}ms`;
-        observer.observe(el);
-      });
-    }
-
-    function animarLista() {
-      const cards = musicList.querySelectorAll('.music-card');
-      cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.animation = `cardIn .42s cubic-bezier(.2,.8,.2,1) forwards`;
-        card.style.animationDelay = `${index * 70}ms`;
-      });
-    }
-
-    function render() {
-      esconderBuscando();
-      atualizarVisibilidadeMaisOuvidas();
-
-      if (!resultados.length) {
-        musicList.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-
-      musicList.innerHTML = resultados.map((m, i) => {
-        const titulo = pegarTitulo(m);
-        const artista = pegarArtista(m);
-        const capa = pegarCapa(m);
-
-        return `
-          <article class="music-card">
-            <div class="music-rank">#${i + 1}</div>
-            <img class="music-cover" src="${escapeHtml(capa)}" alt="Capa" onerror="this.src='https://via.placeholder.com/72x72/e8f2ff/1f7fff?text=%E2%99%AA'">
-            <div class="music-content">
-              <div class="music-meta">
-                ${modoBusca ? "" : '<span class="music-badge">Top</span>'}
-                <h3 class="music-title">${escapeHtml(titulo)}</h3>
-              </div>
-              <div class="music-artist">${escapeHtml(artista)}</div>
-            </div>
-            <div class="music-actions">
-              <button class="icon-btn" onclick="abrirYoutube(${i})" title="Abrir no YouTube">
-                <svg viewBox="0 0 24 24" stroke-width="2">
-                  <path d="M14 3h7v7"></path>
-                  <path d="M10 14 21 3"></path>
-                  <path d="M21 14v4a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h4"></path>
-                </svg>
-              </button>
-
-              <button class="icon-btn" onclick="copiar(${i}, false)" title="Copiar normal">
-                <svg viewBox="0 0 24 24" stroke-width="2">
-                  <rect x="9" y="9" width="11" height="11" rx="2"></rect>
-                  <path d="M5 15V6a2 2 0 0 1 2-2h9"></path>
-                </svg>
-              </button>
-
-              <button class="icon-btn" onclick="copiar(${i}, true)" title="Copiar com grave">
-                <svg viewBox="0 0 24 24" stroke-width="2">
-                  <path d="M3 10v4"></path>
-                  <path d="M7 7v10"></path>
-                  <path d="M11 4v16"></path>
-                  <path d="M15 7v10"></path>
-                  <path d="M19 10v4"></path>
-                </svg>
-              </button>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      animarLista();
-    }
-
-    async function buscar() {
-  const q = queryInput.value.trim();
-
-  if (!q) {
-    modoBusca = false;
-    resultados = [...featuredSongs];
-    render();
-    return;
-  }
-
-  modoBusca = true;
-  resultados = [];
-  atualizarCabecalhoMusicas();
-  mostrarBuscando(`Procurando por "${q}"...`);
-  document.getElementById("musicas")?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  try {
-    const res = await fetch(`https://apimusic.thryl.com.br/search?q=${encodeURIComponent(q)}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data = await res.json();
-    resultados = normalizarLista(data);
-    render();
-  } catch (e) {
-    console.error(e);
-    resultados = [];
-    render();
-    showToast("Erro ao buscar músicas.", "error");
-  }
-}
-
-    function carregarMaisTocadas() {
-  carregandoMaisTocadas = false;
-  modoBusca = false;
-  resultados = [...featuredSongs];
-  render();
-}
-
-    function abrirYoutube(i) {
-      const m = resultados[i];
-      if (!m) return;
-      const url = gerarYoutubeUrl(m);
-      window.open(url, "_blank");
-    }
-
-    async function copiar(i, grave = false) {
-      const m = resultados[i];
-      if (!m) {
-        showToast(carregandoMaisTocadas ? "Aguarde o carregamento." : "Música não encontrada.", "warning");
-        return;
-      }
-
-      const link = gerarLink(m, grave);
-      if (!link) {
-        showToast("Essa música não carregou com ID válido.", "warning");
-        return;
-      }
-
-      const ok = await copyText(link);
-      showToast(ok ? "Link copiado." : "Falha ao copiar link.", ok ? "success" : "error");
-    }
-
-    queryInput.addEventListener("input", () => {
-      if (!queryInput.value.trim() && modoBusca) {
-        carregarMaisTocadas();
-      }
-    });
-
-    queryInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") buscar();
-    });
-
-    iniciarReveals();
-    atualizarVisibilidadeMaisOuvidas();
-    carregarMaisTocadas();
-  </script>
+  <div id="toastWrap" class="toast-wrap"></div>
 </body>
 </html>
