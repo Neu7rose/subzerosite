@@ -8,7 +8,7 @@
 
   const PIX_CONFIG = {
     enabled: true,
-    key: 'sua-chave-pix-aqui',
+    key: 'semchavepix@gmail.com',
     owner: 'Subzero Music',
     description: 'Apoie a plataforma e ajude o projeto a continuar online.'
   };
