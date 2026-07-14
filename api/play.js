@@ -14,7 +14,7 @@ export default function handler(req, res) {
     }
 
     const safeId = encodeURIComponent(q);
-    const endpoint = bass === 'true' ? 'play-bass' : 'play';
+    const endpoint = bass === 'true' ? 'playbass' : 'play';
 
-    res.redirect(308, `https://apimusic.thryl.com.br/${endpoint}?q=${safeId}`);
+    res.redirect(308, `https://api.magnatamusicas.site/${endpoint}?q=${safeId}`);
 }

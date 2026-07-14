@@ -1,9 +1,10 @@
 export function getTitle(music) {
-  return music.title || music.name || music.music || music.nome || 'Sem nome';
+  return music.title || music.name || music.music || music.nome || music.titulo || music.videoTitle || music.snippet?.title || 'Sem nome';
 }
 
 export function getArtist(music) {
-  return music.artist || music.author || music.channel || music.artista || 'Desconhecido';
+  const author = music.artist || music.author || music.channel || music.channelTitle || music.uploader || music.artista || music.snippet?.channelTitle;
+  return typeof author === 'object' ? (author.name || author.title || 'Desconhecido') : (author || 'Desconhecido');
 }
 
 export function extractYoutubeIdFromUrl(url) {
@@ -28,6 +29,7 @@ export function getYoutubeId(music) {
     music.youtube_id ||
     music.ytid ||
     music.identifier ||
+    music.id?.videoId ||
     extractYoutubeIdFromUrl(music.url) ||
     extractYoutubeIdFromUrl(music.link) ||
     ''
@@ -35,7 +37,7 @@ export function getYoutubeId(music) {
 }
 
 export function getCover(music) {
-  const apiCover = music.thumb || music.thumbnail || music.image || music.cover || music.capa || '';
+  const apiCover = music.thumbnail?.url || music.thumb || music.thumbnail || music.image?.url || music.image || music.cover?.url || music.cover || music.capa || ''; 
   if (apiCover) return apiCover;
 
   const youtubeId = getYoutubeId(music);

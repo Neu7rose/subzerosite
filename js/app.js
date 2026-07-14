@@ -2,7 +2,10 @@
   'use strict';
 
   const API = {
-    searchUrl: 'https://apimusic.thryl.com.br/search',
+    searchUrl: 'https://api.magnatamusicas.site/search',
+    playUrl: 'https://api.magnatamusicas.site/play',
+    playBassUrl: 'https://api.magnatamusicas.site/playbass',
+    downloadUrl: 'https://api.magnatamusicas.site/download',
     localPlayPath: '/api/play'
   };
 
@@ -70,28 +73,56 @@
   }
 
   function normalizeList(data) {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.results)) return data.results;
-    if (Array.isArray(data?.data)) return data.data;
-    if (Array.isArray(data?.items)) return data.items;
-    if (Array.isArray(data?.musics)) return data.musics;
-    if (Array.isArray(data?.videos)) return data.videos;
-    return [];
+    const candidates = [
+      data,
+      data?.results,
+      data?.result,
+      data?.data,
+      data?.data?.results,
+      data?.data?.items,
+      data?.items,
+      data?.musics,
+      data?.songs,
+      data?.videos
+    ];
+    const list = candidates.find(Array.isArray) || [];
+    return list.map(normalizeMusic).filter(Boolean);
+  }
+
+  function normalizeMusic(item) {
+    if (!item || typeof item !== 'object') return null;
+    const source = item.video || item.music || item.song || item.track || item.data || item;
+    const thumbnails = source.thumbnails || item.thumbnails;
+    const thumbnailFromList = Array.isArray(thumbnails)
+      ? [...thumbnails].reverse().find((entry) => typeof entry === 'string' || entry?.url)
+      : null;
+
+    return {
+      ...item,
+      ...source,
+      id: source.id || source.videoId || source.video_id || source.youtubeId || source.youtube_id || source.ytid || source.identifier || item.id,
+      title: source.title || source.name || source.nome || source.titulo || source.videoTitle || item.title,
+      artist: source.artist || source.author || source.channel || source.channelTitle || source.uploader || source.artista || item.artist,
+      thumbnail: source.thumbnail?.url || source.thumbnail || source.thumb || source.image?.url || source.image || source.cover?.url || source.cover || source.capa || (typeof thumbnailFromList === 'string' ? thumbnailFromList : thumbnailFromList?.url),
+      url: source.url || source.webpage_url || source.youtubeUrl || source.youtube_url || source.link || item.url
+    };
   }
 
   function getTitle(music) {
-    return music?.title || music?.name || music?.nome || music?.titulo || music?.videoTitle || 'Música sem título';
+    return music?.title || music?.name || music?.nome || music?.titulo || music?.videoTitle || music?.snippet?.title || 'Música sem título';
   }
 
   function getArtist(music) {
-    return music?.artist || music?.author || music?.channel || music?.canal || music?.uploader || 'Artista desconhecido';
+    const author = music?.artist || music?.author || music?.channel || music?.channelTitle || music?.canal || music?.uploader || music?.artista || music?.snippet?.channelTitle;
+    return typeof author === 'object' ? (author.name || author.title || 'Artista desconhecido') : (author || 'Artista desconhecido');
   }
 
   function getYoutubeId(music) {
-    const direct = music?.id || music?.videoId || music?.youtubeId || music?.ytid;
+    const rawId = music?.id || music?.videoId || music?.video_id || music?.youtubeId || music?.youtube_id || music?.ytid || music?.identifier;
+    const direct = typeof rawId === 'object' ? (rawId.videoId || rawId.id) : rawId;
     if (direct) return String(direct);
 
-    const url = music?.url || music?.link || music?.youtube || music?.webpage_url;
+    const url = music?.url || music?.link || music?.youtube || music?.youtubeUrl || music?.youtube_url || music?.webpage_url;
     if (!url) return '';
 
     const patterns = [
@@ -233,7 +264,8 @@
 
   function getCover(music) {
     const id = getYoutubeId(music);
-    return music?.thumbnail || music?.image || music?.cover || music?.thumb || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : fallbackCover);
+    const cover = music?.thumbnail?.url || music?.thumbnail || music?.image?.url || music?.image || music?.cover?.url || music?.cover || music?.thumb || music?.capa;
+    return cover || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : fallbackCover);
   }
 
   async function copyText(text) {
